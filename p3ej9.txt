@@ -1,0 +1,31 @@
+1
+pi DNIB, nombYApB, direccionB, telefonoContacto, mail (
+	barbero |x| (ó valor>5000 (atencion)))
+
+SELECT DNIB, nombYApB, direccionB, telefonoContacto, mail 
+FROM barbero b INNER JOIN atencion a ON (b.codEmpleado=a.codEmpleado)
+WHERE a.valor>5000
+
+2
+seAtendieronEnCortaBarba <- cliente |x| atencion |x| (
+				ó razon_social='Corta Barba' (barberia))
+seAtendieronEnBarberiaBarbara <- cliente |x| atencion |x| (
+				ó razon_social='Barberia Barbara' (barberia))
+pi DNI, nombYAp, direccionC, fechaNacimiento, celular (
+	seAtendieronEnCortaBarba intersect seAtendieronEnBarberiaBarbara)
+
+SELECT DNI, nombYAp, direccionC, fechaNacimiento, celular 
+FROM cliente c
+WHERE EXISTS (SELECT * FROM cliente c 
+		INNER JOIN atencion a ON (c.nroCliente=a.nroCliente)
+		INNER JOIN barberia b ON (a.codBarberia=b.codBarberia)
+		WHERE b.razon_social='Corta Barba')
+AND EXISTS (SELECT * FROM cliente c 
+		INNER JOIN atencion a ON (c.nroCliente=a.nroCliente)
+		INNER JOIN barberia b ON (a.codBarberia=b.codBarberia)
+		WHERE b.razon_social='Barberia Barbara')
+
+3
+cliente <- cliente - (ó dni='22222222' (cliente))
+
+DELETE FROM cliente WHERE dni='22222222'

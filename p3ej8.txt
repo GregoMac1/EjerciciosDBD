@@ -1,6 +1,8 @@
 1
 delta nombYAp='Pablo Lopez' (ó matricula='MP 10000' (veterinario))
 
+UPDATE veterinario SET nombYAp='Pablo Lopez' WHERE matricula='MP 10000'
+
 2
 seRealizaronCon4545 <- pi nombre, edad, raza, peso (
 	mascota |x| supervision |x| (ó matricula='MN 4545' (veterinario)))

@@ -1,0 +1,29 @@
+1
+SELECT c.nombre, c.anioFundacion
+FROM club b INNER JOIN ciudad ci ON (c.codigoCiudad=ci.codigoCiudad) 
+WHERE ci.nombre='La Plata'
+AND NOT EXIST (SELECT * FROM club c
+		INNER JOIN estadio e ON (c.codigoClub=e.codigoClub))
+
+2
+
+
+3
+
+
+4
+SELECT j.dni, j.nombre, j.apellido
+FROM jugador j 
+WHERE (j.edad > 29)
+AND EXISTS (SELECT * FROM jugador j
+		INNER JOIN clubJugador cj ON (jugador.dni=cj.dni)
+		INNER JOIN club ON (cj.codigoClub=club.codigoClub)
+		INNER JOIN ciudad c ON (club.codigoCiudad=c.codigoCiudad)
+		WHERE c.nombre='Cordoba')
+
+8
+SELECT j.nombre, j.apellido FROM jugador j
+WHERE NOT EXIST (SELECT * FROM club c
+	EXCEPT (SELECT * FROM club c 
+		INNER JOIN clubJugador cj ON (cj.codigoClub=c.codigoClub)
+		INNER JOIN jugador j ON (j.dni=cj.dni)))

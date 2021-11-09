@@ -1,0 +1,63 @@
+1.1
+SELECT A.RAZON_SOCIAL, A.direccion, A.telef
+FROM VIAJE INNER JOIN CIUDAD ON (VIAJE.cpOrigen=CIUDAD.CODIGOPOSTAL) 
+	INNER JOIN AGENCIA AS A ON (VIAJE.razon_social=A.RAZON_SOCIAL) 
+	INNER JOIN CLIENTE ON (VIAJE.DNI=CLIENTE.DNI)
+WHERE (CIUDAD.nombreCiudad='La Plata') AND (CLIENTE.apellido='Roma')
+ORDER BY A.RAZON_SOCIAL, A.telef;
+
+1.2
+SELECT v.fecha, v.hora, c.dni, c.nombre, c.apellido, 
+ciu.nombreCiudad as ciudadOrigen, ciu2.nombreCiudad as ciudadDestino, v.descripcion 
+FROM viaje v INNER JOIN cliente c ON v.DNI=c.DNI 
+	INNER JOIN ciudad ciu ON (v.cpOrigen=ciu.codigoPostal) 
+	INNER JOIN ciudad ciu2 ON (v.cpDestino=ciu2.codigoPostal)
+WHERE v.descripcion='demorado' and v.FECHA LIKE '2019-01-%';
+
+1.3
+SELECT a.razon_social, a.direccion, a.telef, a.e_mail
+FROM agencia a INNER JOIN viaje v ON (v.razon_social=a.razon_social)
+WHERE (v.fecha LIKE '2019-%') OR (a.e_mail LIKE '%@jmail.com');
+
+1.4
+SELECT c.dni, c.nombre, c.apellido 
+FROM cliente c INNER JOIN viaje v ON (c.DNI=v.DNI)
+	INNER JOIN ciudad ciu ON (v.cpDestino=ciu.codigoPostal)
+WHERE ciu.nombreCiudad='Coronel Brandsen'
+EXCEPT
+(SELECT c.dni, c.nombre, c.apellido 
+FROM cliente c INNER JOIN viaje v ON (c.DNI=v.DNI)
+	INNER JOIN ciudad ciu ON (v.cpDestino=ciu.codigoPostal)
+WHERE ciu.nombreCiudad!='Coronel Brandsen');
+
+1.5
+SELECT COUNT(v.fecha) as cantViajes
+FROM viaje v INNER JOIN agencia a ON (v.razon_social=a.razon_social) 
+	INNER JOIN ciudad c ON (v.cpDestino=c.codigopostal)
+WHERE (a.razon_social='TAXI Y') and (c.nombreCiudad='Villa Elisa')
+
+1.6
+SELECT c.nombre, c.apellido, c.direccion, c.telefono
+FROM cliente c
+WHERE NOT EXISTS ((SELECT a.razon_social FROM agencia a) 
+	EXCEPT (SELECT a.razon_social FROM viaje v INNER JOIN cliente c ON (c.dni=v.dni) 
+		INNER JOIN agencia a ON (v.razon_social=a.razon_social) 
+		WHERE c.dni=v.dni AND v.razon_social=a.razon_social))
+
+1.7
+UPDATE cliente SET telefono='2214400897' WHERE dni='38495444'
+
+1.8
+SELECT a.razon_social, a.direccion, a.telefono //Diego
+FROM agencia a INNER JOIN viaje v ON (a.razon_social=v.razon_social)
+GROUP BY a.razon_social, a.direccion, a.telefono
+HAVING COUNT () >= ALL (SELECT COUNT() FROM viaje GROUP BY razon_social)
+
+1.9
+SELECT c.nombre, c.apellido, c.direccion, c.telefono
+FROM cliente c INNER JOIN viaje v ON (c.DNI=v.DNI)
+GROUP BY c.nombre, c.apellido, c.direccion, c.telefono
+HAVING COUNT() >= 10
+
+1.10
+DELETE FROM cliente WHERE dni='40325692'

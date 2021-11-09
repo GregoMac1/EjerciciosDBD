@@ -1,0 +1,29 @@
+1
+delta nombYAp='Pablo Lopez' (ó matricula='MP 10000' (veterinario))
+
+2
+seRealizaronCon4545 <- pi nombre, edad, raza, peso (
+	mascota |x| supervision |x| (ó matricula='MN 4545' (veterinario)))
+seRealizaronCon1000 <- pi nombre, edad, raza, peso (
+	mascota |x| supervision |x| (ó matricula='MP 1000' (veterinario)))
+seRealizaronCon4545 [intersect] seRealizaronCon1000
+
+SELECT nombre, edad, raza, peso FROM mascota
+WHERE EXISTS (SELECT * FROM mascota m 
+		INNER JOIN supervision s ON (m.codMascota=s.codMascota) 
+		INNER JOIN veterinario v ON (s.matricula=v.matricula)
+		WHERE v.matricula='MN 4545')
+AND EXISTS (SELECT * FROM mascota m 
+		INNER JOIN supervision s ON (m.codMascota=s.codMascota) 
+		INNER JOIN veterinario v ON (s.matricula=v.matricula)
+		WHERE v.matricula='MP 1000')
+
+3
+pi nroBox, m2, ubicacion, capacidad, nombre (
+	(ó fechaEntra>='2020/01/01' ^ fechaEntra<='2020/12/31' (supervision)) 
+	|x| box |x| mascota)
+
+SELECT b.nroBox, b.m2, b.ubicacion, b.capacidad, m.nombre
+FROM supervision s INNER JOIN mascota m ON (s.codMascota=m.codMascota)
+	INNER JOIN box b ON (s.nroBox=b.nroBox)
+WHERE s.fechaEntra LIKE '2020-%'
